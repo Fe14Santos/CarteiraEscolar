@@ -121,7 +121,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\REGULAR2.png" />
+    <None Include="Resources\11.png" />
+    <None Include="Resources\AEE2.png" />
+    <None Include="Resources\32.png" />
     <Content Include="transforICON.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="View\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

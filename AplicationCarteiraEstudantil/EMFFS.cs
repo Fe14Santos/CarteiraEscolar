@@ -18,39 +18,89 @@ namespace AplicationCarteiraEstudantil
     {
         ImpressaoService ImpressaoService = new ImpressaoService();
         List<Alunos> alunos = new List<Alunos>();
-
         public EMFFS()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
-
         private void btnAbrir_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog();
             tbxOrigem.Text = openFileDialog1.FileName;
             string path = openFileDialog1.FileName;
 
+           
+
             if (!File.Exists(path))
             {
                 MessageBox.Show("Arquivo não encontrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            using (FileStream fileStream = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            if (rbRegular.Checked)
             {
-                using (StreamReader streamReader = new StreamReader(fileStream))
+                using (FileStream fileStream = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
-                    string[] line;
-                    while (!streamReader.EndOfStream)
+
+                    using (StreamReader streamReader = new StreamReader(fileStream))
                     {
-                        line = streamReader.ReadLine().Split(',');
-                        Sexo sexo = (Sexo)Enum.Parse(typeof(Sexo), line[2].ToString());
-                        alunos.Add(new Alunos(line[1].ToUpper(), new SerieTurma(line[0].Replace("_", " ").Substring(0, 5).ToUpper(), line[0].Substring(6).ToUpper()), sexo));
+                        string[] line;
+                        while (!streamReader.EndOfStream)
+                        {
+                            line = streamReader.ReadLine().Split(',');
+                            Sexo sexo = (Sexo)Enum.Parse(typeof(Sexo), line[2].ToString());
+                            alunos.Add(new Alunos(line[1].ToUpper(), new SerieTurma(line[0].Replace("_", " ").Substring(0, 5).ToUpper(), line[0].Substring(6).ToUpper()), sexo));
+                        }
+                    }
+                }
+            }
+            if (rbIntegral.Checked)
+            {
+                using (FileStream fileStream = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    {
+                        string[] line;
+                        while (!streamReader.EndOfStream)
+                        {
+                            line = streamReader.ReadLine().Split(',');
+                            Sexo sexo = (Sexo)Enum.Parse(typeof(Sexo), line[2].ToString());
+                            alunos.Add(new Alunos(line[1].ToUpper(), new SerieTurma(line[0].Replace("_", " ").Substring(0, 10).ToUpper(), line[0].Substring(11).ToUpper()), sexo));
+                        }
+                    }
+                }
+            }
+            if (rbAEE.Checked)
+            {
+                using (FileStream fileStream = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    {
+                        string[] line;
+                        while (!streamReader.EndOfStream)
+                        {
+                            line = streamReader.ReadLine().Split(',');
+                            Sexo sexo = (Sexo)Enum.Parse(typeof(Sexo), line[2].ToString());
+                            alunos.Add(new Alunos(line[1].ToUpper(), new SerieTurma(line[0].Replace("_", " ").Substring(0, 5).ToUpper(), line[0].Substring(6).ToUpper()), sexo));
+                        }
+                    }
+                }
+            }
+            if (rbEJA.Checked)
+            {
+                using (FileStream fileStream = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    {
+                        string[] line;
+                        while (!streamReader.EndOfStream)
+                        {
+                            line = streamReader.ReadLine().Split(',');
+                            Sexo sexo = (Sexo)Enum.Parse(typeof(Sexo), line[2].ToString());
+                            alunos.Add(new Alunos(line[1].ToUpper(), new SerieTurma(line[0].Replace("_", " ").Substring(0, 6).ToUpper(), line[0].Substring(7).ToUpper()), sexo));
+                        }
                     }
                 }
             }
         }
-
         private void btnSalvar_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.ShowDialog();
@@ -68,23 +118,53 @@ namespace AplicationCarteiraEstudantil
             {
                 progressBar1.Value = count + 1;
                 lbPercetual.Text = (progressBar1.Value / progressBar1.Maximum * 100).ToString() + "%";
-                tbxNome.Text = item.Nome;
-                tbxSexo.Text = item.Sexo.ToString();
-                tbxSerie.Text = item.SerieTurmas.Serie;
-                tbxTurma.Text = item.SerieTurmas.Turma;
-
-                StartImpressao(item.Nome, item.SerieTurmas, targetpath, pnView);
-
+                lbPercetual.Refresh();
+                if (rbRegular.Checked)
+                {                    
+                    tbxNomeAlunoRegular.Text = item.Nome;
+                    tbxSexoAlunoRegular.Text = item.Sexo.ToString();
+                    tbxSerieAlunoRegular.Text = item.SerieTurmas.Serie;
+                    tbxTurmasAlunoRegular.Text = item.SerieTurmas.Turma;
+                    StartImpressao(item.Nome, item.SerieTurmas, targetpath, pnViewRegular);
+                }
+                else if (rbIntegral.Checked)
+                {                 
+                    tbxNomeAlunoIntegral.Text = item.Nome;
+                    tbxSexoAlunoIntegral.Text = item.Sexo.ToString();
+                    tbxSerieAlunoIntegral.Text = item.SerieTurmas.Serie;
+                    tbxTurmasAlunoIntegral.Text = item.SerieTurmas.Turma;
+                    StartImpressao(item.Nome, item.SerieTurmas, targetpath, pnViewIntegral);
+                }
+                else if (rbEJA.Checked)
+                {                  
+                    tbxNomeAlunoEJA.Text = item.Nome;
+                    tbxSexoAlunoEJA.Text = item.Sexo.ToString();
+                    tbxSerieAlunoEJA.Text = item.SerieTurmas.Serie;
+                    tbxTurmasAlunoEJA.Text = item.SerieTurmas.Turma;
+                    StartImpressao(item.Nome, item.SerieTurmas, targetpath, pnlViewEJA);
+                }
+                else if (rbAEE.Checked)
+                {                    
+                    tbxNomeAlunoAEE.Text = item.Nome;
+                    tbxSexoAlunoAEE.Text = item.Sexo.ToString();
+                    tbxSerieAlunoAEE.Text = item.SerieTurmas.Serie;
+                    tbxTurmasAlunoAEE.Text = item.SerieTurmas.Turma;
+                    StartImpressao(item.Nome, item.SerieTurmas, targetpath, pnViewAEE);
+                }
                 lbPercetual.Refresh();
                 progressBar1.Refresh();
                 count++;
             }
             MessageBox.Show("Operação Realizada Com Sucesso!!!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"{count} Geras com Sucesso");
+            ImpressaoService = new ImpressaoService();
+             alunos = new List<Alunos>();
         }
         private void EMFFS_Load(object sender, EventArgs e)
         {
             btnIniciar.Enabled = false;
             rbArquivo.Checked = true;
+            MessageBox.Show("Antes de Selecionar o Arquivo, Marque a Opção desejada","IMPORTANTE!!!",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
         }
         private void rbFormulario_CheckedChanged(object sender, EventArgs e)
         {
@@ -106,12 +186,12 @@ namespace AplicationCarteiraEstudantil
         {
             string targetpath = @tbxDestino.Text;
 
-            if (string.IsNullOrEmpty(tbxNome.Text))
-            {
-                MessageBox.Show("O nome não pode estar vazio.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (string.IsNullOrEmpty(tbxSerie.Text) || string.IsNullOrEmpty(tbxTurma.Text))
+            //if (string.IsNullOrEmpty(tbxNome.Text))
+            //{
+            //    MessageBox.Show("O nome não pode estar vazio.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+            if (string.IsNullOrEmpty(tbxSerieAlunoIntegral.Text) || string.IsNullOrEmpty(tbxTurmasAlunoIntegral.Text))
             {
                 MessageBox.Show("Selecione a série/turma.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -121,7 +201,9 @@ namespace AplicationCarteiraEstudantil
                 MessageBox.Show("O caminho de destino não pode estar vazio.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            ImpressaoService.ProcessingImpressao(tbxNome.Text, new SerieTurma(tbxSerie.Text, tbxTurma.Text), targetpath, pnView);
+
+            ImpressaoService.ProcessingImpressao(tbxNomeAlunoIntegral.Text, new SerieTurma(tbxSerieAlunoIntegral.Text, tbxTurmasAlunoIntegral.Text), targetpath, pnViewIntegral);
+
         }
         private void btnPathSource_Click(object sender, EventArgs e)
         {
@@ -162,7 +244,32 @@ namespace AplicationCarteiraEstudantil
             {
                 MessageBox.Show("Ocorreu um erro desconhecido: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }       
+        }
+
+        private void pnView_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tbxNome_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pnViewAEE_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label13_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 //using System;
